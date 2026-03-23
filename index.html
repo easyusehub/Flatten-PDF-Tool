@@ -71,6 +71,7 @@ fileInput.addEventListener('change', async e => {
     renderAllPages();
 });
 
+// Render PDF clearly with higher scale for sharp display
 async function renderAllPages(){
     pdfViewer.innerHTML = '';
     canvasList = [];
@@ -78,29 +79,30 @@ async function renderAllPages(){
     for(let p=1; p<=pdfDoc.numPages; p++){
         const page = await pdfDoc.getPage(p);
         const viewport = page.getViewport({scale:1});
-        const scale = pdfViewer.clientWidth / viewport.width;
-        const scaledViewport = page.getViewport({scale:scale});
+        const scale = (pdfViewer.clientWidth / viewport.width) * 1.5; // 1.5 = sharper
+        const scaledViewport = page.getViewport({scale: scale});
 
         const canvas = document.createElement('canvas');
         canvas.width = scaledViewport.width;
         canvas.height = scaledViewport.height;
-        await page.render({canvasContext: canvas.getContext('2d'), viewport: scaledViewport}).promise;
+
+        const ctx = canvas.getContext('2d');
+        ctx.imageSmoothingEnabled = true;
+
+        await page.render({canvasContext: ctx, viewport: scaledViewport}).promise;
+
         pdfViewer.appendChild(canvas);
         canvasList.push(canvas);
     }
 }
 
-// Flatten PDF by drawing each page onto a new PDF (annotations and form fields are removed)
+// Flatten PDF: copies pages into a new PDF (annotations/form fields removed)
 flattenBtn.onclick = async () => {
     if(!pdfBytes) return;
     const pdfLibDoc = await PDFLib.PDFDocument.create();
     const origDoc = await PDFLib.PDFDocument.load(pdfBytes);
     const pages = await pdfLibDoc.copyPages(origDoc, origDoc.getPageIndices());
-
-    pages.forEach((page)=>{
-        pdfLibDoc.addPage(page);
-    });
-
+    pages.forEach((page)=> pdfLibDoc.addPage(page));
     pdfBytes = await pdfLibDoc.save();
     alert('PDF flattened! You can now download it.');
 };
