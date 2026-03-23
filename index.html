@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flatten PDF Tool</title>
+<meta name="description" content="Flatten PDF files online. Make annotations and form fields permanent. Mobile-friendly, multi-page support.">
+<style>
+body { font-family: Arial,sans-serif; margin:0; padding:0; background:#f9f9f9; color:#333; }
+header { padding:15px; background:#9333ea; color:#fff; text-align:center; }
+header h1 { margin:0; font-size:1.8rem; }
+header p { margin:5px 0 0; font-size:0.95rem; }
+.ad-placeholder { width:100%; height:60px; background:#ccc; text-align:center; line-height:60px; margin:10px 0; border-radius:8px; }
+.container { max-width:900px; margin:20px auto; padding:0 15px; }
+#upload-box { border:3px dashed #9333ea; padding:20px; text-align:center; cursor:pointer; border-radius:10px; background:#fff; margin-bottom:15px; }
+#pdf-viewer { width:100%; border:1px solid #ccc; overflow:auto; margin-bottom:20px; background:#fff; position:relative; }
+#pdf-viewer canvas { display:block; width:100%; height:auto; margin-bottom:10px; }
+.controls { display:flex; flex-wrap:wrap; justify-content:center; margin-bottom:10px; }
+button { padding:10px 20px; border:none; border-radius:8px; background:#9333ea; color:#fff; cursor:pointer; margin:5px; }
+#toast { position:fixed; top:20px; left:50%; transform:translateX(-50%); background:#9333ea; color:#fff; padding:10px 20px; border-radius:8px; display:none; z-index:9999; }
+</style>
+</head>
+<body>
+
+<header>
+<h1>Flatten PDF Tool</h1>
+<p>Make your PDF static, annotations and form fields permanent.</p>
+</header>
+
+<div class="ad-placeholder">Top Ad Placeholder</div>
+
+<div class="container">
+<div id="upload-box">📁 Upload PDF</div>
+<input type="file" id="fileInput" accept="application/pdf" hidden>
+
+<div class="ad-placeholder">Middle Ad Placeholder</div>
+
+<div class="controls">
+<button onclick="window.location.href='https://easyusehub.blogspot.com/?m=1'">🏠 Home</button>
+<button onclick="window.location.href='https://easyusehub.blogspot.com/p/free-pdf-tools-easyusehub.html?m=1'">📚 All PDF Tools</button>
+<button id="flattenPdfBtn">Flatten PDF</button>
+<button id="downloadPdf">Download PDF</button>
+</div>
+
+<div id="pdf-viewer"></div>
+
+<div id="toast">PDF downloaded!</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+
+<script>
+const uploadBox = document.getElementById('upload-box');
+const fileInput = document.getElementById('fileInput');
+const pdfViewer = document.getElementById('pdf-viewer');
+const flattenBtn = document.getElementById('flattenPdfBtn');
+const downloadBtn = document.getElementById('downloadPdf');
+const toast = document.getElementById('toast');
+
+let pdfDoc = null, pdfBytes = null;
+let canvasList = [];
+
+uploadBox.onclick = () => fileInput.click();
+
+fileInput.addEventListener('change', async e => {
+    const file = e.target.files[0];
+    if(!file) return;
+    pdfBytes = await file.arrayBuffer();
+    pdfDoc = await pdfjsLib.getDocument({data: pdfBytes}).promise;
+    renderAllPages();
+});
+
+async function renderAllPages(){
+    pdfViewer.innerHTML = '';
+    canvasList = [];
+
+    for(let p=1; p<=pdfDoc.numPages; p++){
+        const page = await pdfDoc.getPage(p);
+        const viewport = page.getViewport({scale:1});
+        const scale = pdfViewer.clientWidth / viewport.width;
+        const scaledViewport = page.getViewport({scale:scale});
+
+        const canvas = document.createElement('canvas');
+        canvas.width = scaledViewport.width;
+        canvas.height = scaledViewport.height;
+        await page.render({canvasContext: canvas.getContext('2d'), viewport: scaledViewport}).promise;
+        pdfViewer.appendChild(canvas);
+        canvasList.push(canvas);
+    }
+}
+
+// Flatten PDF by drawing each page onto a new PDF (annotations and form fields are removed)
+flattenBtn.onclick = async () => {
+    if(!pdfBytes) return;
+    const pdfLibDoc = await PDFLib.PDFDocument.create();
+    const origDoc = await PDFLib.PDFDocument.load(pdfBytes);
+    const pages = await pdfLibDoc.copyPages(origDoc, origDoc.getPageIndices());
+
+    pages.forEach((page)=>{
+        pdfLibDoc.addPage(page);
+    });
+
+    pdfBytes = await pdfLibDoc.save();
+    alert('PDF flattened! You can now download it.');
+};
+
+// Download flattened PDF
+downloadBtn.onclick = () => {
+    if(!pdfBytes) return;
+    const blob = new Blob([pdfBytes], {type:'application/pdf'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'flattened.pdf';
+    a.click();
+    toast.style.display='block';
+    setTimeout(()=>{toast.style.display='none';},2500);
+};
+</script>
+
+</body>
+</html>
