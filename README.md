@@ -4,6 +4,7 @@ Flatten PDF Tool is a free online utility that makes your PDF files static and n
 
 🔗 Live: https://easyusehub.github.io/Flatten-PDF-Tool/
 ⁠
+
 🚀 Features
 
 Flatten PDF files online — remove form fields and annotations
