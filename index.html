@@ -2,55 +2,108 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Flatten PDF Tool</title>
-<meta name="description" content="Flatten PDF files online. Make annotations and form fields permanent. Mobile-friendly, multi-page support.">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Flatten PDF Tool – EasyUseHub</title>
 <style>
-body { font-family: Arial,sans-serif; margin:0; padding:0; background:#f9f9f9; color:#333; }
-header { padding:15px; background:#9333ea; color:#fff; text-align:center; }
-header h1 { margin:0; font-size:1.8rem; }
-header p { margin:5px 0 0; font-size:0.95rem; }
-.ad-placeholder { width:100%; height:60px; background:#ccc; text-align:center; line-height:60px; margin:10px 0; border-radius:8px; }
-.container { max-width:900px; margin:20px auto; padding:0 15px; }
-#upload-box { border:3px dashed #9333ea; padding:20px; text-align:center; cursor:pointer; border-radius:10px; background:#fff; margin-bottom:15px; }
-#pdf-viewer { width:100%; border:1px solid #ccc; overflow:auto; margin-bottom:20px; background:#fff; position:relative; }
-#pdf-viewer canvas { display:block; width:100%; height:auto; margin-bottom:10px; }
-.controls { display:flex; flex-wrap:wrap; justify-content:center; margin-bottom:10px; }
-button { padding:10px 20px; border:none; border-radius:8px; background:#9333ea; color:#fff; cursor:pointer; margin:5px; }
-#toast { position:fixed; top:20px; left:50%; transform:translateX(-50%); background:#9333ea; color:#fff; padding:10px 20px; border-radius:8px; display:none; z-index:9999; }
+:root { --primary: #9333ea; --bg: #f8fafc; }
+body, html { margin:0; padding:0; font-family: 'Segoe UI', Tahoma, sans-serif; background:var(--bg); overflow-x: hidden; }
+
+header { background: linear-gradient(135deg,#9333ea,#7c3aed); color:#fff; padding:20px; text-align:center; box-shadow:0 2px 10px rgba(0,0,0,0.1); }
+header h1 { margin:0; font-size:1.6rem; }
+.container { width: 100%; max-width: 900px; margin:auto; padding:10px; box-sizing: border-box; text-align:center; }
+
+/* --- 🔥 Rakib235: 3 Ad Bridges --- */
+.custom-ad-bridge {
+    background: linear-gradient(135deg, #1e3a8a, #2563eb);
+    color: white; padding: 15px; margin: 15px auto; border-radius: 12px; cursor: pointer;
+    width: 100%; max-width: 650px; box-shadow: 0 4px 15px rgba(255, 0, 0, 0.25); display: inline-block; box-sizing: border-box; text-align: left;
+}
+.ad-title { font-size: 15px; font-weight: bold; display: block; margin-bottom: 4px; }
+.ad-desc { font-size: 11px; opacity: 0.9; display: block; margin-bottom: 8px; line-height: 1.4; }
+.ad-btn { background: #fbbf24; color: #000; padding: 5px 15px; border-radius: 5px; font-weight: bold; font-size: 10px; border:none; text-transform: uppercase; }
+
+/* --- 🔥 Rakib235: Push Ad with X --- */
+#push-notification {
+    position: fixed; bottom: -150px; right: 20px;
+    width: 85%; max-width: 300px; background: #fff; border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2); display: flex; align-items: center; 
+    padding: 12px; z-index: 10000; transition: 0.6s; border-left: 5px solid var(--primary); text-align: left;
+}
+#push-notification.active { bottom: 20px; }
+#push-notification img { width: 35px; height: 35px; margin-right: 12px; border-radius: 6px; }
+.push-text b { font-size: 13px; color: #333; display: block; }
+.push-text p { font-size: 10px; color: #666; margin: 0; }
+.close-push { position: absolute; top: 5px; right: 10px; font-size: 18px; cursor: pointer; color: #bbb; font-weight: bold; }
+
+/* Tool UI */
+#upload-box { border:3px dashed var(--primary); padding:30px; text-align:center; cursor:pointer; border-radius:12px; background:#fff; margin:15px 0; transition: 0.3s; color: var(--primary); font-weight: bold; }
+#upload-box:hover { background: #fdf4ff; }
+#pdf-viewer { width:100%; border:1px solid #ddd; overflow:auto; margin-bottom:20px; background:#fff; border-radius: 10px; min-height: 200px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+#pdf-viewer canvas { display:block; width:100%; height:auto; margin-bottom:10px; border-bottom: 1px solid #eee; }
+
+.controls { display:flex; flex-wrap:wrap; justify-content:center; gap: 10px; margin: 15px 0; }
+.nav-btn { padding:10px 20px; border:none; border-radius:8px; background:var(--primary); color:#fff; cursor:pointer; font-weight: bold; font-size: 14px; }
+.btn-dark { background: #1e293b; }
+.btn-success { background: #10b981; }
+
+#toast { position:fixed; top:20px; left:50%; transform:translateX(-50%); background:#10b981; color:#fff; padding:10px 20px; border-radius:8px; display:none; z-index:9999; font-weight: bold; }
 </style>
 </head>
 <body>
 
+<div id="push-notification">
+    <span class="close-push" onclick="document.getElementById('push-notification').classList.remove('active');">&times;</span>
+    <div style="display:flex; align-items:center; width:100%;" onclick="window.open('https://easyusehub.blogspot.com', '_blank')">
+        <img src="https://cdn-icons-png.flaticon.com/512/5968/5968313.png" alt="icon">
+        <div class="push-text"><b>🚀 46+ Premium Tools Free</b><p>Fast access at EasyUseHub.</p></div>
+    </div>
+</div>
+
 <header>
-<h1>Flatten PDF Tool</h1>
-<p>Make your PDF static, annotations and form fields permanent.</p>
+    <h1>Flatten PDF Tool</h1>
+    <p>Make your PDF static and permanent instantly.</p>
 </header>
 
-<div class="ad-placeholder">Top Ad Placeholder</div>
-
 <div class="container">
-<div id="upload-box">📁 Upload PDF</div>
-<input type="file" id="fileInput" accept="application/pdf" hidden>
+    <div class="custom-ad-bridge" onclick="window.open('https://easyusehub.blogspot.com', '_blank')">
+        <span class="ad-title">🚀 Try 46+ Premium Free Web Tools!</span>
+        <span class="ad-desc">Explore the best PDF editors, compressors and calculators for free.</span>
+        <button class="ad-btn">Open EasyUseHub</button>
+    </div>
 
-<div class="ad-placeholder">Middle Ad Placeholder</div>
+    <div id="upload-box">📁 Click to Upload PDF File</div>
+    <input type="file" id="fileInput" accept="application/pdf" hidden>
 
-<div class="controls">
-<button onclick="window.location.href='https://easyusehub.blogspot.com/?m=1'">🏠 Home</button>
-<button onclick="window.location.href='https://easyusehub.blogspot.com/p/free-pdf-tools-online.html'">📚 All PDF Tools</button>
-<button id="flattenPdfBtn">Flatten PDF</button>
-<button id="downloadPdf">Download PDF</button>
+    <div class="custom-ad-bridge" style="background: linear-gradient(135deg, #7c3aed, #9333ea);" onclick="window.open('https://easyusehub.blogspot.com/p/ultimate-calculators-hub.html', '_blank')">
+        <span class="ad-title">🔢 Smart Online Calculators</span>
+        <span class="ad-desc">Loan EMI, Age, and BMI calculators in one place for free.</span>
+        <button class="ad-btn" style="background:#fff; color:#7c3aed;">Try Now</button>
+    </div>
+
+    <div class="controls">
+        <button class="nav-btn btn-dark" onclick="window.location.href='https://easyusehub.blogspot.com/'">🏠 Home</button>
+        <button class="nav-btn btn-dark" onclick="window.location.href='https://easyusehub.blogspot.com/p/free-pdf-tools-online.html'">📂 All PDF Tools</button>
+        <button class="nav-btn btn-success" id="flattenPdfBtn">Flatten PDF</button>
+        <button class="nav-btn" id="downloadPdf">Download PDF</button>
+    </div>
+
+    <div id="pdf-viewer"></div>
+
+    <div class="custom-ad-bridge" style="background: linear-gradient(135deg, #059669, #10b981);" onclick="window.open('https://easyusehub.blogspot.com/p/image-compressor.html', '_blank')">
+        <span class="ad-title">⚡ High-Speed Image Compressor</span>
+        <span class="ad-desc">Compress images without losing quality in seconds.</span>
+        <button class="ad-btn" style="background:#fff; color:#059669;">Compress Now</button>
+    </div>
 </div>
 
-<div id="pdf-viewer"></div>
-
-<div id="toast">PDF downloaded!</div>
-</div>
+<div id="toast">✅ PDF downloaded successfully!</div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
 
 <script>
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+
 const uploadBox = document.getElementById('upload-box');
 const fileInput = document.getElementById('fileInput');
 const pdfViewer = document.getElementById('pdf-viewer');
@@ -59,7 +112,6 @@ const downloadBtn = document.getElementById('downloadPdf');
 const toast = document.getElementById('toast');
 
 let pdfDoc = null, pdfBytes = null;
-let canvasList = [];
 
 uploadBox.onclick = () => fileInput.click();
 
@@ -67,57 +119,55 @@ fileInput.addEventListener('change', async e => {
     const file = e.target.files[0];
     if(!file) return;
     pdfBytes = await file.arrayBuffer();
-    pdfDoc = await pdfjsLib.getDocument({data: pdfBytes}).promise;
+    pdfDoc = await pdfjsLib.getDocument({data: pdfBytes.slice(0)}).promise;
     renderAllPages();
+    document.getElementById('push-notification').classList.add('active');
 });
 
-// Render PDF clearly with higher scale for sharp display
 async function renderAllPages(){
-    pdfViewer.innerHTML = '';
-    canvasList = [];
+    pdfViewer.innerHTML = '<p style="padding:20px; color:#666;">Rendering Pages...</p>';
+    const pagesContainer = document.createDocumentFragment();
 
     for(let p=1; p<=pdfDoc.numPages; p++){
         const page = await pdfDoc.getPage(p);
-        const viewport = page.getViewport({scale:1});
-        const scale = (pdfViewer.clientWidth / viewport.width) * 1.5; // 1.5 = sharper
-        const scaledViewport = page.getViewport({scale: scale});
-
+        // Zoom Fix: Using scale 1.2 for clear but not oversized view
+        const viewport = page.getViewport({scale: 1.2});
         const canvas = document.createElement('canvas');
-        canvas.width = scaledViewport.width;
-        canvas.height = scaledViewport.height;
+        canvas.width = viewport.width;
+        canvas.height = viewport.height;
 
         const ctx = canvas.getContext('2d');
-        ctx.imageSmoothingEnabled = true;
-
-        await page.render({canvasContext: ctx, viewport: scaledViewport}).promise;
-
-        pdfViewer.appendChild(canvas);
-        canvasList.push(canvas);
+        await page.render({canvasContext: ctx, viewport: viewport}).promise;
+        pagesContainer.appendChild(canvas);
     }
+    pdfViewer.innerHTML = '';
+    pdfViewer.appendChild(pagesContainer);
 }
 
-// Flatten PDF: copies pages into a new PDF (annotations/form fields removed)
 flattenBtn.onclick = async () => {
-    if(!pdfBytes) return;
-    const pdfLibDoc = await PDFLib.PDFDocument.create();
-    const origDoc = await PDFLib.PDFDocument.load(pdfBytes);
-    const pages = await pdfLibDoc.copyPages(origDoc, origDoc.getPageIndices());
-    pages.forEach((page)=> pdfLibDoc.addPage(page));
-    pdfBytes = await pdfLibDoc.save();
-    alert('PDF flattened! You can now download it.');
+    if(!pdfBytes) { alert('Please upload a PDF first!'); return; }
+    try {
+        const origDoc = await PDFLib.PDFDocument.load(pdfBytes);
+        const pdfLibDoc = await PDFLib.PDFDocument.create();
+        const pages = await pdfLibDoc.copyPages(origDoc, origDoc.getPageIndices());
+        pages.forEach((page)=> pdfLibDoc.addPage(page));
+        pdfBytes = await pdfLibDoc.save();
+        alert('PDF Flattened Successfully! Now you can download.');
+    } catch (err) {
+        alert('Error flattening PDF: ' + err.message);
+    }
 };
 
-// Download flattened PDF
 downloadBtn.onclick = () => {
-    if(!pdfBytes) return;
+    if(!pdfBytes) { alert('No PDF to download!'); return; }
     const blob = new Blob([pdfBytes], {type:'application/pdf'});
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'flattened.pdf';
+    a.download = 'flattened_easyusehub.pdf';
     a.click();
     toast.style.display='block';
-    setTimeout(()=>{toast.style.display='none';},2500);
+    setTimeout(()=>{toast.style.display='none';},3000);
 };
 </script>
 
